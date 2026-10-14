@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For Kirat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rose:#ff6b9d;
+    --rose-deep:#e0457b;
+    --blush:#ffd1e0;
+    --cream:#fff5f8;
+    --night1:#2a0a2e;
+    --night2:#5c1a4f;
+    --night3:#b0366b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Poppins',sans-serif;
+    color:var(--cream);
+    background:linear-gradient(160deg,var(--night1),var(--night2) 55%,var(--night3));
+    background-size:200% 200%;
+    animation:bgShift 18s ease-in-out infinite;
+    overflow:hidden;
+  }
+  @keyframes bgShift{0%,100%{background-position:0% 0%}50%{background-position:100% 100%}}
+
+  canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+  .stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .stars i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;opacity:.0;animation:twinkle 4s infinite}
+  @keyframes twinkle{0%,100%{opacity:0;transform:scale(.6)}50%{opacity:.8;transform:scale(1.2)}}
+
+  main{position:relative;z-index:1;height:100%;display:flex;align-items:center;justify-content:center;padding:20px}
+
+  .card{
+    width:min(560px,100%);
+    min-height:420px;
+    padding:48px 36px 40px;
+    border-radius:28px;
+    background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.22);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    box-shadow:0 30px 80px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.25);
+    text-align:center;
+    display:flex;flex-direction:column;justify-content:space-between;
+    position:relative;
+  }
+
+  .slide{display:none;animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+  .slide.active{display:block}
+  @keyframes rise{from{opacity:0;transform:translateY(26px) scale(.98)}to{opacity:1;transform:none}}
+
+  .emoji{font-size:54px;margin-bottom:14px;display:inline-block;animation:beat 1.6s ease-in-out infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.18)}28%{transform:scale(1)}42%{transform:scale(1.12)}}
+
+  h1,h2{font-family:'Playfair Display',serif;font-weight:700;line-height:1.2;margin-bottom:18px}
+  h1{font-size:clamp(34px,8vw,48px)}
+  h2{font-size:clamp(28px,6.5vw,38px)}
+  .script{font-family:'Dancing Script',cursive;font-size:clamp(34px,8vw,46px);color:var(--blush);margin-bottom:10px}
+  p{font-size:clamp(15px,3.6vw,17px);line-height:1.85;font-weight:300;color:#ffeaf2;margin:0 auto 12px;max-width:440px}
+  p b{font-weight:500;color:#fff}
+  em{font-family:'Playfair Display',serif;font-style:italic;color:var(--blush)}
+
+  .controls{margin-top:30px;display:flex;flex-direction:column;align-items:center;gap:20px}
+  button{
+    font-family:inherit;cursor:pointer;border:0;
+    padding:14px 34px;border-radius:999px;font-size:16px;font-weight:500;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .btn{
+    color:#fff;
+    background:linear-gradient(135deg,var(--rose),var(--rose-deep));
+    box-shadow:0 10px 30px rgba(255,107,157,.45);
+  }
+  .btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 16px 40px rgba(255,107,157,.6)}
+  .btn:active{transform:scale(.97)}
+  .btn.ghost{background:rgba(255,255,255,.14);box-shadow:none;border:1px solid rgba(255,255,255,.3)}
+
+  .dots{display:flex;gap:8px;justify-content:center}
+  .dots span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);transition:all .4s}
+  .dots span.on{background:var(--rose);width:26px;border-radius:6px}
+
+  .choices{display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap;min-height:60px;position:relative}
+  #no{position:relative}
+
+  .hidden{display:none!important}
+
+  .signature{font-family:'Dancing Script',cursive;font-size:30px;color:var(--blush);margin-top:16px}
+
+  .music{
+    position:fixed;top:16px;right:16px;z-index:5;width:44px;height:44px;padding:0;
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:18px;
+  }
+
+  @media(max-width:480px){.card{padding:38px 22px 30px;min-height:460px}}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<canvas id="fx"></canvas>
+
+<main>
+  <div class="card" id="card">
+
+    <div id="slides">
+
+      <section class="slide active">
+        <div class="emoji">💌</div>
+        <p class="script">Kirat,</p>
+        <h1>I have something to tell you</h1>
+        <p>It's from my heart, and I wrote it slowly, only for you.</p>
+      </section>
+
+      <section class="slide">
+        <div class="emoji">🥺</div>
+        <h2>I'm sorry</h2>
+        <p>I'm sorry that you felt <b>I don't understand you</b>.</p>
+        <p>No one should ever feel unheard by the person they love, and I hate that I made you feel that way, even for a moment.</p>
+      </section>
+
+      <section class="slide">
+        <div class="emoji">🤍</div>
+        <h2>But I do get you</h2>
+        <p>I really do, Kirat. I notice more than I say. I understand your moods, your silences, your little reactions, and what matters to you.</p>
+        <p>The problem was never that I didn't understand you. It was that I didn't <em>show</em> it.</p>
+      </section>
+
+      <section class="slide">
+        <div class="emoji">🤐</div>
+        <h2>Why I went quiet</h2>
+        <p>Sometimes I held back my words. Not because I don't care, but because I was <b>afraid of irritating you</b>.</p>
+        <p>I was so scared of saying the wrong thing that I said nothing. I see now that my silence felt like distance, and that's my fault, not yours.</p>
+      </section>
+
+      <section class="slide">
+        <div class="emoji">⏳</div>
+        <h2>I have all the time for you</h2>
+        <p>Please don't ever think I don't have time for you.</p>
+        <p><b>I have all day for you.</b> Every day. Every hour you want me.</p>
+        <p>It was never a lack of time or love. It was only fear.</p>
+      </section>
+
+      <section class="slide">
+        <div class="emoji">🌹</div>
+        <h2>My promise</h2>
+        <p>I'll speak up, even when I'm nervous.</p>
+        <p>I'll tell you what I'm thinking, and I'll listen to what you're feeling, really listen.</p>
+        <p>Even if I say it clumsily, I'd rather say it than leave you wondering.</p>
+      </section>
+
+      <section class="slide" id="final">
+        <div class="emoji">❤️</div>
+        <p class="script">Kirat,</p>
+        <h1>I love you</h1>
+        <p>Very much. Today, tomorrow, and on the days we disagree too.</p>
+        <p><b>Will you forgive me?</b></p>
+      </section>
+
+      <section class="slide" id="yes-slide">
+        <div class="emoji">🥹</div>
+        <h1>Thank you, my love</h1>
+        <p>You just made my whole heart smile. I'll hold on to this, and to you, and I'll do better, starting now.</p>
+        <p>Come here, I'm hugging you tight right now. 🤗</p>
+        <div class="signature">Forever yours ♡</div>
+      </section>
+
+    </div>
+
+    <div class="controls">
+      <div class="choices hidden" id="choices">
+        <button class="btn" id="yes">Yes, I forgive you 💖</button>
+        <button class="btn ghost" id="no">No</button>
+      </div>
+      <button class="btn" id="next">Open it</button>
+      <div class="dots" id="dots"></div>
+    </div>
+
+  </div>
+</main>
+
+<button class="music" id="music" title="Play soft music" aria-label="Toggle music">♪</button>
+
+<script>
+(function(){
+  /* ---------- Slides ---------- */
+  const slides = [...document.querySelectorAll('.slide')];
+  const storySlides = slides.length - 1; // last one is the "yes" reaction
+  const dotsEl = document.getElementById('dots');
+  const nextBtn = document.getElementById('next');
+  const choices = document.getElementById('choices');
+  const yesBtn = document.getElementById('yes');
+  const noBtn  = document.getElementById('no');
+  let i = 0;
+
+  for(let k=0;k<storySlides;k++){ dotsEl.appendChild(document.createElement('span')); }
+
+  function show(n){
+    slides.forEach((s,idx)=>s.classList.toggle('active',idx===n));
+    [...dotsEl.children].forEach((d,idx)=>d.classList.toggle('on',idx===n));
+    const isFinal = n === storySlides-1;
+    nextBtn.classList.toggle('hidden', isFinal || n>=storySlides);
+    choices.classList.toggle('hidden', !isFinal);
+    if(n===1) nextBtn.textContent = 'Keep reading';
+    else if(n>1) nextBtn.textContent = 'Next';
+    if(n >= storySlides){ dotsEl.classList.add('hidden'); choices.classList.add('hidden'); }
+  }
+  nextBtn.addEventListener('click',()=>{ if(i<storySlides-1){ i++; show(i); burst(window.innerWidth/2, window.innerHeight*0.5, 10); } startMusic(); });
+  show(0);
+
+  /* ---------- The playful "No" button ---------- */
+  const noTexts = ['No','Are you sure? 🥺','Please? 🥹','Think again 💔','I love you 🌹','Just one smile? 😊'];
+  let noCount = 0;
+  function dodge(e){
+    e.preventDefault();
+    noCount++;
+    noBtn.textContent = noTexts[Math.min(noCount, noTexts.length-1)];
+    const pad = 20;
+    const bw = noBtn.offsetWidth, bh = noBtn.offsetHeight;
+    const x = Math.random()*(window.innerWidth - bw - pad*2) + pad;
+    const y = Math.random()*(window.innerHeight - bh - pad*2) + pad;
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = x+'px';
+    noBtn.style.top = y+'px';
+    noBtn.style.zIndex = 4;
+    const scale = Math.min(1 + noCount*0.12, 1.9);
+    yesBtn.style.transform = 'scale('+scale+')';
+    yesBtn.style.margin = (noCount*4)+'px';
+  }
+  noBtn.addEventListener('mouseenter', dodge);
+  noBtn.addEventListener('touchstart', dodge, {passive:false});
+  noBtn.addEventListener('click', dodge);
+
+  yesBtn.addEventListener('click',()=>{
+    i = slides.length-1; show(i);
+    noBtn.style.display='none';
+    for(let k=0;k<6;k++){
+      setTimeout(()=>burst(Math.random()*window.innerWidth, Math.random()*window.innerHeight*0.7, 40), k*250);
+    }
+  });
+
+  /* ---------- Twinkling stars ---------- */
+  const starWrap = document.getElementById('stars');
+  for(let k=0;k<70;k++){
+    const s=document.createElement('i');
+    s.style.left=Math.random()*100+'%';
+    s.style.top=Math.random()*100+'%';
+    s.style.animationDelay=(Math.random()*4)+'s';
+    s.style.animationDuration=(3+Math.random()*4)+'s';
+    starWrap.appendChild(s);
+  }
+
+  /* ---------- Floating hearts + bursts ---------- */
+  const cv = document.getElementById('fx');
+  const ctx = cv.getContext('2d');
+  let W,H,dpr=Math.min(window.devicePixelRatio||1,2);
+  function resize(){
+    W=window.innerWidth;H=window.innerHeight;
+    cv.width=W*dpr;cv.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize(); window.addEventListener('resize',resize);
+
+  const colors=['#ff6b9d','#ff9ec0','#ffd1e0','#ff4f87','#ffffff','#ffb3cc'];
+  const hearts=[];
+  function makeHeart(x,y,burstMode){
+    return {
+      x:x, y:y,
+      size: burstMode ? 8+Math.random()*14 : 8+Math.random()*18,
+      vx: burstMode ? (Math.random()-.5)*7 : (Math.random()-.5)*.5,
+      vy: burstMode ? -(Math.random()*6+2) : -(.4+Math.random()*1.1),
+      g:  burstMode ? .12 : 0,
+      life: burstMode ? 1 : 1,
+      decay: burstMode ? .012+Math.random()*.01 : 0,
+      rot: (Math.random()-.5)*.8,
+      vr: (Math.random()-.5)*.03,
+      wob: Math.random()*Math.PI*2,
+      c: colors[Math.floor(Math.random()*colors.length)],
+      a: burstMode ? 1 : .15+Math.random()*.4,
+      burst: burstMode
+    };
+  }
+  function drawHeart(h){
+    const s=h.size;
+    ctx.save();
+    ctx.translate(h.x,h.y);
+    ctx.rotate(h.rot);
+    ctx.globalAlpha=h.a*(h.burst?h.life:1);
+    ctx.fillStyle=h.c;
+    ctx.beginPath();
+    ctx.moveTo(0,s*.3);
+    ctx.bezierCurveTo(0,-s*.1,-s*.6,-s*.1,-s*.6,s*.3);
+    ctx.bezierCurveTo(-s*.6,s*.65,0,s*.85,0,s*1.1);
+    ctx.bezierCurveTo(0,s*.85,s*.6,s*.65,s*.6,s*.3);
+    ctx.bezierCurveTo(s*.6,-s*.1,0,-s*.1,0,s*.3);
+    ctx.fill();
+    ctx.restore();
+  }
+  function burst(x,y,n){
+    for(let k=0;k<n;k++) hearts.push(makeHeart(x,y,true));
+  }
+  window.burst = burst;
+
+  for(let k=0;k<22;k++) hearts.push(makeHeart(Math.random()*window.innerWidth, Math.random()*window.innerHeight,false));
+
+  let last=0;
+  function loop(t){
+    ctx.clearRect(0,0,W,H);
+    for(let k=hearts.length-1;k>=0;k--){
+      const h=hearts[k];
+      h.wob+=.02;
+      h.x+=h.vx+(h.burst?0:Math.sin(h.wob)*.4);
+      h.vy+=h.g; h.y+=h.vy;
+      h.rot+=h.vr;
+      if(h.burst){ h.life-=h.decay; if(h.life<=0){hearts.splice(k,1);continue;} }
+      else if(h.y<-40){ h.y=H+30; h.x=Math.random()*W; }
+      drawHeart(h);
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // slow trickle of new hearts rising up
+  setInterval(()=>{ if(hearts.length<60) hearts.push(makeHeart(Math.random()*W,H+20,false)); },1200);
+
+  /* ---------- Soft ambient tone (no external audio needed) ---------- */
+  let audioCtx=null, playing=false, nodes=[];
+  const musicBtn=document.getElementById('music');
+  function startMusic(){
+    if(playing) return;
+    try{
+      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      const master=audioCtx.createGain();
+      master.gain.value=0.0001;
+      master.connect(audioCtx.destination);
+      master.gain.exponentialRampToValueAtTime(0.05,audioCtx.currentTime+3);
+      // gentle warm chord
+      [261.63,329.63,392.0,523.25].forEach((f,idx)=>{
+        const o=audioCtx.createOscillator();
+        o.type='sine'; o.frequency.value=f;
+        const lfo=audioCtx.createOscillator(); lfo.frequency.value=.15+idx*.05;
+        const lg=audioCtx.createGain(); lg.gain.value=2;
+        lfo.connect(lg); lg.connect(o.frequency);
+        o.connect(master); o.start(); lfo.start();
+        nodes.push(o,lfo);
+      });
+      nodes.master=master;
+      playing=true; musicBtn.textContent='♫';
+    }catch(e){}
+  }
+  function stopMusic(){
+    if(!playing) return;
+    nodes.forEach(n=>{try{n.stop()}catch(e){}});
+    nodes=[]; playing=false; musicBtn.textContent='♪';
+  }
+  musicBtn.addEventListener('click',()=>playing?stopMusic():startMusic());
+})();
+</script>
+</body>
+</html>
